@@ -73,6 +73,8 @@ jobs:
             --enable-tests
       - name: Run libnomp tests
         run: |
+          PYBIN="$(command -v python)"
+          export LD_LIBRARY_PATH="$(dirname "$PYBIN")/../lib:$LD_LIBRARY_PATH"
           ${NOMP_INSTALL_DIR}/bin/lnrun --test backend=opencl
       - name: Block to allow inspecting failures
         run: sleep 30m

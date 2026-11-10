@@ -51,4 +51,11 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
       - name: Check formatting
         run: |
+          # setup-miniconda (miniconda-version: latest) installs into ./3 inside
+          # the checkout; move it out and symlink so lnchk's repo-wide find does
+          # not scan conda's headers while PATH entries keep resolving.
+          if [ -d "$GITHUB_WORKSPACE/3" ] && [ ! -L "$GITHUB_WORKSPACE/3" ]; then
+            mv "$GITHUB_WORKSPACE/3" /tmp/nomp-conda3
+            ln -s /tmp/nomp-conda3 "$GITHUB_WORKSPACE/3"
+          fi
           ./bin/lnchk --chk-fmt
